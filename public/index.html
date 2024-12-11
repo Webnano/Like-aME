@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Like Me</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylo.css">
+</head>
+<body>
+    <h1>Like Me</h1>
+    <div class="container">
+        <div class="form-container">
+            <h2>Agregar Nuevo Post</h2>
+            <input type="text" id="titulo" placeholder="Ingresa tu Nombre">
+            <div class="input-group">
+                <input type="text" id="img-url" placeholder="Elige tu Avatar">
+                <button class="avatar-button" onclick="mostrarPopup()">Seleccionar Avatar</button>
+            </div>
+            <textarea id="descripcion" placeholder="Di lo que Quieras"></textarea>
+            <button onclick="agregarPost()">Agregar</button>
+            <div class="avatar-popup" id="avatar-popup" style="display:none;">
+                <button class="close-button" onclick="cerrarPopup()">Cerrar</button>
+                <img src="avatar1.jpg" alt="Avatar 1" onclick="seleccionarAvatar('avatar1.jpg')">
+                <img src="avatar2.jpg" alt="Avatar 2" onclick="seleccionarAvatar('avatar2.jpg')">
+                <img src="avatar3.jpg" alt="Avatar 3" onclick="seleccionarAvatar('avatar3.jpg')">
+                <img src="avatar4.jpg" alt="Avatar 4" onclick="seleccionarAvatar('avatar4.jpg')">
+                <img src="avatar5.jpg" alt="Avatar 5" onclick="seleccionarAvatar('avatar5.jpg')">
+                <img src="avatar6.jpg" alt="Avatar 6" onclick="seleccionarAvatar('avatar6.jpg')">
+            </div>
+        </div>
+        <div class="posts-container">
+            <div id="notification" class="notification">Post eliminado con éxito</div>
+            <div id="posts-container"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchPosts() {
+            try {
+                const response = await fetch('/posts');
+                if (!response.ok) {
+                    throw new Error('Error fetching posts');
+                }
+                const posts = await response.json();
+
+                posts.sort((a, b) => b.likes - a.likes);
+
+                const postsContainer = document.getElementById('posts-container');
+                postsContainer.innerHTML = '';
+
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('post');
+                    postElement.innerHTML = `
+                        <h2>${post.titulo}</h2>
+                        <img src="${post.img}" alt="${post.titulo}" onerror="this.src='fallback-image.jpg';">
+                        <p>${post.descripcion}</p>
+                        <div class="actions">
+                            <div class="likes">
+                                <button class="like-button" onclick="incrementarLikes(${post.id})">
+                                    <i class="fas fa-check"></i> Me Gusta
+                                </button>
+                                <span id="likes-${post.id}">${post.likes}</span>
+                            </div>
+                            <button class="delete-button" onclick="eliminarPost(${post.id})">
+                                <i class="fas fa-trash-alt"></i> X
+                            </button>
+                        </div>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        }
+
+        async function incrementarLikes(id) {
+            try {
+                const response = await fetch(`/posts/${id}`);
+                if (!response.ok) {
+                    throw new Error('Post not found');
+                }
+                const post = await response.json();
+                const nuevoLikes = post.likes + 1;
+
+                const updateResponse = await fetch(`/posts/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ likes: nuevoLikes }),
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error('Error updating post');
+                }
+
+                document.getElementById(`likes-${id}`).textContent = nuevoLikes;
+
+            } catch (error) {
+                console.error('Error incrementando likes:', error);
+            }
+        }
+
+        async function agregarPost() {
+            const titulo = document.getElementById('titulo').value;
+            const img = document.getElementById('img-url').value;
+            const descripcion = document.getElementById('descripcion').value;
+
+            const response = await fetch('/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ titulo, img, descripcion, likes: 0 }),
+            });
+
+            if (response.ok) {
+                fetchPosts();
+                limpiarFormulario();
+            } else {
+                console.error('Error adding post');
+            }
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('titulo').value = '';
+            document.getElementById('img-url').value = '';
+            document.getElementById('descripcion').value = '';
+        }
+
+        async function eliminarPost(id) {
+            const response = await fetch(`/posts/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                mostrarNotificacion();
+                fetchPosts();
+            } else {
+                console.error('Error deleting post');
+            }
+        }
+
+        function mostrarNotificacion() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function mostrarPopup() {
+            const popup = document.getElementById('avatar-popup');
+            popup.style.display = 'block';
+        }
+
+        function cerrarPopup() {
+            const popup = document.getElementById('avatar-popup');
+            popup.style.display = 'none';
+        }
+
+        function seleccionarAvatar(avatar) {
+            document.getElementById('img-url').value = avatar;
+            cerrarPopup();
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPosts);
+    </script>
+</body>
+</html>

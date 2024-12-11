@@ -1,0 +1,166 @@
+ /* Estilos básicos para la interfaz */
+ body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    margin-top: 20px;
+}
+.form-container {
+    background-color: #12c4db;
+    padding: 40px;
+    border-radius: 10px;
+    width: 30%;
+    position: relative;
+}
+.form-container input, .form-container textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.form-container .input-group {
+    display: flex;
+    align-items: center;
+}
+.form-container .input-group input {
+    width: calc(100% - 120px);
+}
+.form-container .avatar-button {
+    width: 100px;
+    padding: 10px;
+    margin-left: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.form-container .avatar-button:hover {
+    background-color: #218838;
+}
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.form-container button:hover {
+    background-color: #0056b3;
+}
+.avatar-popup {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+.avatar-popup img {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    cursor: pointer;
+}
+.avatar-popup .close-button {
+    display: block;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+    float: right;
+}
+.posts-container {
+    width: 60%;
+}
+.post {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.post img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+.post .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.post .actions .likes {
+    display: flex;
+    align-items: center;
+}
+.post .actions .likes span {
+    margin-left: 5px;
+}
+.notification {
+    display: none;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.like-button {
+    background-color: #00bfff; /* Celeste */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.like-button:hover {
+    background-color: #009acd; /* Celeste más oscuro cuando se pasa el mouse por encima */
+}
+
+.delete-button {
+    background-color: #ff4c4c; /* Rojo */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-button:hover {
+    background-color: #d43f3f; /* Rojo más oscuro cuando se pasa el mouse por encima */
+}
